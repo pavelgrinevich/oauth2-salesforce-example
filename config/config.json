@@ -1,6 +1,6 @@
 {
   "port": 3000,
-  "callbackURL": "https://localhost:3000/auth/callback",
+  "callbackURL": "http://localhost:3000/callback",
   "authorizeURL": "https://login.salesforce.com/services/oauth2/authorize",
   "tokenURL": "https://login.salesforce.com/services/oauth2/token",
   "credentials": {

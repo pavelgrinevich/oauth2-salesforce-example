@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>recipient of contacts</title>
+	<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+	<div class="wrap">
+		<% if (!user) { %>
+			<h2>Welcome! Please log in.</h2>
+			<a class="auth login" href="/login">login with salesforce.com</a>
+		<% } else { %>
+			<h2>Hello, <%= user.displayName %></h2>
+			<a class="auth logout" href="/logout">logout</a>
+		<% } %>
+	</div>
+</body>
+</html>
