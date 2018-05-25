@@ -1,0 +1,15 @@
+{
+  "name": "oauth2-salesforce-example",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "start": "NODE_PATH=. node app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pavel Grinevich",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "nconf": "^0.10.0"
+  }
+}

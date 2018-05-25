@@ -1,0 +1,10 @@
+{
+  "port": 3000,
+  "callbackURL": "https://localhost:3000/auth/callback",
+  "authorizeURL": "https://login.salesforce.com/services/oauth2/authorize",
+  "tokenURL": "https://login.salesforce.com/services/oauth2/token",
+  "credentials": {
+    "clientID": "3MVG9d8..z.hDcPKGlbEtlpLO7Y5uNu_IsF7YxTOoKQf7mx33T1C0C4ourYEDwUtkrCPX1qpakOCtLPoBf33Z",
+    "clientSecret": "3522073903711274794"
+  }
+}
