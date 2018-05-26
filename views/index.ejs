@@ -13,7 +13,7 @@
 			<h2>Welcome! Please log in.</h2>
 			<a class="auth login" href="/login">login with salesforce.com</a>
 		<% } else { %>
-			<h2>Hello, <%= user.displayName %></h2>
+			<h2>Hello, <%=user.display_name %></h2>
 			<a class="auth logout" href="/logout">logout</a>
 		<% } %>
 	</div>

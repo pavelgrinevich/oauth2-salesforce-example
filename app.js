@@ -27,11 +27,9 @@ app.use(session({
 }));
 
 app.get('/', (req, res) => {
-
-  if(!req.user) {
-    // some happens...
+  if(req.session.user) {
+    req.user = JSON.parse(req.session.user);
   }
-
   res.render('index', {
     user: req.user,
   });
@@ -46,7 +44,7 @@ app.get('/login', (req, res) => {
   res.redirect(`${config.get('authorizeURL')}?${querystring.stringify(params)}`);
 });
 
-app.get('/callback', (req, res) => {
+app.get('/callback', (req, res, next) => {
   const params = {
     grant_type: 'authorization_code',
     code: req.query.code,
@@ -66,17 +64,33 @@ app.get('/callback', (req, res) => {
  
   rp(options)
     .then((body) => {
-      console.log(JSON.parse(body));
+      body = JSON.parse(body);
+      const options = {
+        method: 'GET',
+        uri: body.id,
+        headers: {
+          'Authorization': 'Bearer ' + body.access_token,
+          'Content-Type': 'application/json'
+        },
+      };
+    
+      rp(options)
+        .then((user) => {
+          req.session.user = user;
+          res.redirect('/');
+        })
+        .catch((err) => {
+          next(err);
+        });
+
     })
     .catch((err) => {
-      console.log(err);
+      next(err);
     });
-
-    res.redirect('/');
 });
 
 app.get('/logout', (req, res) => {
-  // some happens...
+  req.session.destroy();
   res.redirect('/');
 });
 
