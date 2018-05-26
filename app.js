@@ -29,9 +29,11 @@ app.use(session({
 app.get('/', (req, res) => {
   if(req.session.user) {
     req.user = JSON.parse(req.session.user);
+    req.contactList = JSON.parse(req.session.contactList);
   }
   res.render('index', {
     user: req.user,
+    contactList: req.contactList,
   });
 });
 
@@ -65,7 +67,8 @@ app.get('/callback', (req, res, next) => {
   rp(options)
     .then((body) => {
       body = JSON.parse(body);
-      const options = {
+
+      const userOptions = {
         method: 'GET',
         uri: body.id,
         headers: {
@@ -73,16 +76,26 @@ app.get('/callback', (req, res, next) => {
           'Content-Type': 'application/json'
         },
       };
-    
-      rp(options)
-        .then((user) => {
-          req.session.user = user;
+
+      url = 'https://ap5.salesforce.com/services/data/v42.0/query/?';
+      const query = querystring.stringify({q: 'SELECT name FROM Contact'});
+      const otherOptions = {
+        method: 'GET',
+        uri: (url + query),
+        headers: {
+          'Authorization': 'Bearer ' + body.access_token,
+          'Content-Type': 'application/json'
+        },
+      };
+      Promise.all([rp(userOptions), rp(otherOptions)])
+        .then((results) => {
+          req.session.user = results[0];
+          req.session.contactList = results[1];
           res.redirect('/');
         })
         .catch((err) => {
           next(err);
         });
-
     })
     .catch((err) => {
       next(err);

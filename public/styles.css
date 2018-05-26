@@ -30,3 +30,46 @@ body {
 .logout {
   width: 80px;
 }
+
+.contact-wrap {
+  position: relative;
+}
+
+.contact {
+  position: relative;
+  width: 150px;
+  margin: 5px;
+  padding: 5px;
+  border: 1px solid rgb(61, 61, 255);
+  background-color: rgb(100, 100, 255);
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+}
+
+.contact::after {
+  position: absolute;
+  top: 2px;
+  right: 5px;
+  content: "▶";
+}
+
+.contact-info {
+  position: absolute;
+  top: 0;
+  left: 180px;
+  width: 640px;
+  height: 400px;
+  padding: 5px;
+  color: rgb(193, 97, 202);
+  background-color: rgb(36, 36, 36);
+  box-shadow: 2px 2px 15px rgba(0, 0, 0, .5);
+  z-index: 1;
+}
+
+.contact-info span {
+  color: rgb(172, 54, 51);
+}
+
+.close {
+  display: none;
+}
