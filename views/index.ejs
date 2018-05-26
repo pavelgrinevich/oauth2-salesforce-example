@@ -9,9 +9,9 @@
 </head>
 <body>
 	<div class="wrap">
-		<% if (!user) { %>
+		<% if (page === 'login') { %>
 			<h2>Welcome! Please log in.</h2>
-			<a class="auth login" href="/login">login with salesforce.com</a>
+			<a class="auth login" href="/authorize">login with salesforce.com</a>
 		<% } else { %>
 			<h2>Hello, <%= user.display_name %></h2>
 			<a class="auth logout" href="/logout">logout</a>
@@ -19,8 +19,10 @@
 				<h3>found <%= contactList.totalSize %> records:</h3>
 				<% for (let i = 0; i < contactList.records.length; i++) {%>
 					<div class="contact-wrap">
-						<div class="contact"><%= contactList.records[i].Name %></div>
-						<div class="contact-info"></div>
+						<a class="contact"><%= contactList.records[i].Name %></a>
+						<% if (contactList.records[i].show) { %>
+							<div class="contact-info"></div>
+						<% } %>
 					</div>
 				<%} %>
 			</div>

@@ -6,5 +6,16 @@
   "credentials": {
     "clientID": "3MVG9d8..z.hDcPKGlbEtlpLO7Y5uNu_IsF7YxTOoKQf7mx33T1C0C4ourYEDwUtkrCPX1qpakOCtLPoBf33Z",
     "clientSecret": "3522073903711274794"
+  },
+  "session": {
+    "secret": "asdf",
+    "name": "session",
+    "resave": false,
+    "saveUninitialized": false,
+    "cookie": {
+      "path": "/",
+      "httpOnly": true,
+      "maxAge": null
+    }
   }
 }

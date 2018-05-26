@@ -9,19 +9,13 @@
   "author": "Pavel Grinevich",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.18.3",
     "ejs": "^2.6.1",
     "errorhandler": "^1.5.0",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
-    "method-override": "^2.3.10",
     "nconf": "^0.10.0",
-    "node-salesforce": "^0.8.0",
-    "passport": "^0.4.0",
-    "passport-forcedotcom": "^0.1.4",
     "querystring": "^0.2.0",
     "request": "^2.87.0",
-    "request-promise": "^4.2.2",
-    "salesforce-rest-api": "^1.0.9"
+    "request-promise": "^4.2.2"
   }
 }

@@ -1,117 +1,77 @@
 const path = require('path');
 const express = require('express');
-const methodOverride = require('method-override');
-const bodyParser = require('body-parser');
+const errorhandler = require('errorhandler');
 const session = require('express-session');
-const errorHandler = require('errorhandler');
-const rp = require('request-promise');
-const querystring = require('querystring');
 const config = require('./config');
+const OAuth = require('./lib/oauth');
+const query = require('./lib/query');
 
 const app = express();
+const oauth = new OAuth({
+  callbackURL = config.get('callbackURL'),
+  authorizeURL = config.get('authorizeURL'),
+  tokenURL = config.get('tokenURL'),
+  clientID = config.get('credentials:clientID'),
+  clientSecret = config.get('credentials:clientSecret'),
+});
 
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
-
-app.use(methodOverride());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ 
-  extended: false 
-}));
 app.use(session({ 
-  name: 'sid',
-  secret: 'asdf',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { path: '/', httpOnly: true, maxAge: null }
+  name: config.get('session:name'),
+  secret: config.get('session:secret'),
+  resave: config.get('session:resave'),
+  saveUninitialized: config.get('session:saveUninitialized'),
+  cookie: config.get('session:cookie'),
 }));
+app.use(oauth.checkAuthorize('/login'));
 
 app.get('/', (req, res) => {
-  if(req.session.user) {
-    req.user = JSON.parse(req.session.user);
-    req.contactList = JSON.parse(req.session.contactList);
-  }
+  const user = query.getUserInfo();
+  const contactList = query.getContactList();
   res.render('index', {
-    user: req.user,
-    contactList: req.contactList,
+    page: 'index',
+    user: user,
+    contactList: contactList,
   });
 });
 
 app.get('/login', (req, res) => {
-  const params = {
-    response_type: 'code',
-    client_id: config.get('credentials:clientID'),
-    redirect_uri: config.get('callbackURL'),
-  };
-  res.redirect(`${config.get('authorizeURL')}?${querystring.stringify(params)}`);
+  res.render('index', {
+    page: 'login',
+  });
 });
 
-app.get('/callback', (req, res, next) => {
-  const params = {
-    grant_type: 'authorization_code',
-    code: req.query.code,
-    client_id: config.get('credentials:clientID'),
-    client_secret: config.get('credentials:clientSecret'),
-    redirect_uri: config.get('callbackURL'),
-  };
-
-  const options = {
-    method: 'POST',
-    uri: config.get('tokenURL'),
-    body: querystring.stringify(params),
-    headers: {
-      'content-type': 'application/x-www-form-urlencoded'
-    },
-  };
- 
-  rp(options)
-    .then((body) => {
-      body = JSON.parse(body);
-
-      const userOptions = {
-        method: 'GET',
-        uri: body.id,
-        headers: {
-          'Authorization': 'Bearer ' + body.access_token,
-          'Content-Type': 'application/json'
-        },
-      };
-
-      url = 'https://ap5.salesforce.com/services/data/v42.0/query/?';
-      const query = querystring.stringify({q: 'SELECT name FROM Contact'});
-      const otherOptions = {
-        method: 'GET',
-        uri: (url + query),
-        headers: {
-          'Authorization': 'Bearer ' + body.access_token,
-          'Content-Type': 'application/json'
-        },
-      };
-      Promise.all([rp(userOptions), rp(otherOptions)])
-        .then((results) => {
-          req.session.user = results[0];
-          req.session.contactList = results[1];
-          res.redirect('/');
-        })
-        .catch((err) => {
-          next(err);
-        });
-    })
-    .catch((err) => {
-      next(err);
-    });
+app.get('/contact:id', (req, res) => {
+  const contactList = query.getContactInfo();
+  // something
 });
 
-app.get('/logout', (req, res) => {
-  req.session.destroy();
+app.get('/authorize', oauth.requestAuthorize());
+
+app.get('/callback', oauth.getAccessToken(), (req, res) => {
+  query.setCredentials({
+    accessToken: req.session.accessToken.access_token,
+    instanceUrl: req.session.accessToken.instance_url,
+    userId: req.session.accessToken.id,
+  });
+  res.redirect('/');
+});
+
+app.get('/logout', oauth.logout(), (req, res) => {
   res.redirect('/');
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-if (app.get('env') === 'development') {
-  app.use(errorHandler());
-}
+app.use((err, req, res, next) => {
+  if (app.get('env') === 'development') {
+    errorhandler(err, req, res, next);
+  } else {
+    res.send(500);
+  }
+
+});
 
 app.listen(config.get('port'), () => {
   console.log(`Express server listening on port ${config.get('port')}`);

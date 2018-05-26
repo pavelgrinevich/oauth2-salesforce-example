@@ -36,6 +36,7 @@ body {
 }
 
 .contact {
+  display: block;
   position: relative;
   width: 150px;
   margin: 5px;
@@ -68,8 +69,4 @@ body {
 
 .contact-info span {
   color: rgb(172, 54, 51);
-}
-
-.close {
-  display: none;
 }
