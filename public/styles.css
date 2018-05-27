@@ -28,6 +28,8 @@ body {
 }
 
 .logout {
+  border: 1px solid rgb(160, 83, 83);
+  background-color: rgb(165, 42, 42);
   width: 80px;
 }
 
@@ -36,12 +38,11 @@ body {
 }
 
 .contact {
-  display: block;
   position: relative;
   width: 150px;
   margin: 5px;
   padding: 5px;
-  border: 1px solid rgb(61, 61, 255);
+  border: 1px solid rgb(180, 180, 255);
   background-color: rgb(100, 100, 255);
   color: rgb(255, 255, 255);
   cursor: pointer;
@@ -69,4 +70,8 @@ body {
 
 .contact-info span {
   color: rgb(172, 54, 51);
+}
+
+.hide {
+  display: none;
 }
