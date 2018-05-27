@@ -2,11 +2,11 @@
 
 ### Requirements
 
-In order to use this example, you'll need to have a Connected App inside of Salesforce.
+In order to use this example, you need to have a Connected App inside Salesforce.
 
 ### Installation
 
-  `git clone https://github.com/vedi/oauth2-salesforce-example.git`  
+  `git clone https://github.com/pavelgrinevich/oauth2-salesforce-example.git`  
   `cd oauth2-salesforce-example`  
   `npm install`  
   `then setup app's clientID and app's clientSecret (./config/config.json)`  
