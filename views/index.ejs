@@ -16,7 +16,7 @@
 			<h2>Hello, <%= user.display_name %></h2>
 			<a class="auth logout" href="/logout">logout</a>
 			<div>
-				<h3>found <%= contactList.totalSize %> records:</h3>
+				<h3>Found <%= contactList.totalSize %> records:</h3>
 				<% for (let i = 0; i < contactList.records.length; i++) {%>
 					<div class="contact-wrap">
 						<div class="contact"><%= contactList.records[i].Name %></div>

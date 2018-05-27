@@ -3,30 +3,42 @@ const contactInfoList = document.querySelectorAll('.contact-info');
 document.addEventListener('click', (e) => {
   const target = e.target;
 
-  if (!target.classList.contains('contact-info')) {
+  if (!target.closest('.contact-info')) {
     contactInfoList.forEach(element => {
       element.classList.add('hide');
     });
   }
-
+  
   if (target.classList.contains('contact')) {
-    const contactInfo = target.nextElementSibling;
+    const contactInfoDiv = target.nextElementSibling;
 
-    fetch(`/${contactInfo.id}`, {  
-      method: 'POST',  
-      headers: {  
+    const options = {
+      method: 'POST',
+      headers: {
         "Content-type": "application/x-www-form-urlencoded; charset=UTF-8"  
-      }, 
-    })
-    .then(function (data) {  
-      data.json().then(function (data) {
-        console.log(JSON.parse(data));
-      })
-    })  
-    .catch(function (error) {  
-      console.log('Request failed', error);  
-    });
+      },
+    };
 
-    contactInfo.classList.remove('hide');
+    contactInfoDiv.innerText = 'please wait, loading ...'
+
+    fetch(`/${contactInfoDiv.id}`, options)
+      .then((result) => result.json())
+      .then((contactInfo) => {
+        contactInfo = JSON.parse(contactInfo);
+
+        contactInfoDiv.innerHTML = `
+          <p>First Name: <span>${contactInfo.FirstName}</span></p>
+          <p>Last Name: <span>${contactInfo.LastName}</span></p>
+          <p>Birthdate: <span>${contactInfo.Birthdate}</span></p>
+          <p>Mobile Phone: <span>${contactInfo.MobilePhone}</span></p>
+          <p>Email: <span>${contactInfo.Email}</span></p>
+        `;
+      })
+      .catch(function (error) {  
+        console.log('Request failed', error);  
+      });
+
+      contactInfoDiv.classList.remove('hide');
   }
 });
+
