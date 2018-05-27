@@ -53,7 +53,7 @@ app.get('/login', (req, res) => {
 app.post('/:id', (req, res, next) => {
   query.getContactInfo(req.params.id)
     .then((result) => {
-      res.json(result);
+      res.json(JSON.stringify(result));
     })
     .catch((err) => {
       next(err);
